@@ -171,7 +171,7 @@
       <select id="bloco" required>
         <option value="" disabled selected>Selecione</option>
         <option>Eletrônico</option>
-        <option>Posto de Serviço</option>
+        <option id="opcao-bloco-posto">Posto de Serviço</option>
         <option>Administração</option>
       </select>
     </div>
@@ -312,6 +312,7 @@
 
   var elUnidade = $("unidade");
   var elBloco = $("bloco");
+  var elOpcaoBlocoPosto = $("opcao-bloco-posto");
   var elCampoPosto = $("campo-posto");
   var elPosto = $("posto");
   var elNome = $("nomeFuncionario");
@@ -368,6 +369,17 @@
         elPosto.innerHTML = '<option value="" disabled selected>Não foi possível carregar os postos — recarregue a página</option>';
       }
     });
+
+  // Bloco "Posto de Serviço" só existe em Volta Redonda — em Niterói não tem
+  // posto cadastrado, então a opção fica indisponível.
+  function atualizarOpcaoBlocoPorUnidade() {
+    var niteroi = elUnidade.value === "Niterói";
+    elOpcaoBlocoPosto.disabled = niteroi;
+    if (niteroi && elBloco.value === "Posto de Serviço") {
+      elBloco.value = "";
+      atualizarCampoPosto();
+    }
+  }
 
   function atualizarCampoPosto() {
     if (elBloco.value !== "Posto de Serviço") {
@@ -471,6 +483,7 @@
     }
   }
 
+  elUnidade.addEventListener("change", atualizarOpcaoBlocoPorUnidade);
   elBloco.addEventListener("change", atualizarCampoPosto);
   elDemissao.addEventListener("change", atualizarAvisoPrevio);
   elAviso.addEventListener("change", atualizarDatasAviso);
