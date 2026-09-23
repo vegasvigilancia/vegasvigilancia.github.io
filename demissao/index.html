@@ -288,6 +288,7 @@
       "Nova oportunidade profissional",
       "Questões relacionadas a gestão",
       "Mudança de domicílio",
+      "Não informado",
     ],
     "Desligado": [
       "Desempenho abaixo do esperado",
@@ -297,6 +298,7 @@
       "Elevado número de afastamentos",
       "Rescisão por acordo",
       "Deliberação da diretoria",
+      "Não informado",
     ],
     "Justa Causa": ["Justa causa"],
   };
@@ -553,6 +555,15 @@
     }
     if (!elForm.reportValidity()) return;
 
+    if (elDataAdmissao.value && elDataAdmissao.value > hoje()) {
+      mostrarErro("Data de admissão não pode ser uma data futura.");
+      return;
+    }
+    if (!elCamposDatasAviso.classList.contains("hidden") && elAvisoInicio.value && elAvisoInicio.value > hoje()) {
+      mostrarErro("Data inicial do Aviso Prévio não pode ser uma data futura.");
+      return;
+    }
+
     var payload = {
       unidade: elUnidade.value,
       bloco: elBloco.value,
@@ -595,6 +606,9 @@
         elBtnEnviar.textContent = "Enviar";
       });
   });
+
+  elDataAdmissao.max = hoje();
+  elAvisoInicio.max = hoje();
 
   atualizarAvisoPrevio();
 })();
