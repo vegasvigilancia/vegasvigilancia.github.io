@@ -563,6 +563,10 @@
       mostrarErro("Data inicial do Aviso Prévio não pode ser uma data futura.");
       return;
     }
+    if (!elCamposDatasAviso.classList.contains("hidden") && elAvisoFim.value && elAvisoFim.value < hoje()) {
+      mostrarErro("Data final do Aviso Prévio não pode ser antes do dia vigente.");
+      return;
+    }
 
     var payload = {
       unidade: elUnidade.value,
@@ -609,6 +613,7 @@
 
   elDataAdmissao.max = hoje();
   elAvisoInicio.max = hoje();
+  elAvisoFim.min = hoje();
 
   atualizarAvisoPrevio();
 })();
