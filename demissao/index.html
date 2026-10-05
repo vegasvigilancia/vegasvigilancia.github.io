@@ -88,26 +88,6 @@
     min-height: 1.2em;
   }
   .hidden { display: none !important; }
-  canvas {
-    width: 100%;
-    height: 180px;
-    display: block;
-    border-radius: 8px;
-    border: 1px dashed var(--border);
-    background: #ffffff;
-    touch-action: none;
-    cursor: crosshair;
-  }
-  .sig-actions { display: flex; justify-content: flex-end; margin-top: 8px; }
-  .btn-link {
-    background: none;
-    border: none;
-    color: var(--accent);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 4px 0;
-  }
   button[type="submit"] {
     width: 100%;
     padding: 14px;
@@ -247,14 +227,6 @@
     <div class="field hidden" id="campo-responsavel-nome">
       <label for="responsavelNome">&nbsp;</label>
       <select id="responsavelNome"></select>
-    </div>
-
-    <div class="field">
-      <label>Assinatura:</label>
-      <canvas id="assinatura" width="600" height="200"></canvas>
-      <div class="sig-actions">
-        <button type="button" class="btn-link" id="limpar-assinatura">Limpar assinatura</button>
-      </div>
     </div>
 
     <div class="field" style="margin-top:26px">
@@ -493,46 +465,6 @@
   elAvisoFim.addEventListener("change", atualizarTempoServico);
   elResponsavelCargo.addEventListener("change", atualizarResponsavelNome);
 
-  // ── Assinatura (mouse no desktop, dedo no mobile — Pointer Events cobre os dois) ──
-  var canvas = $("assinatura");
-  var ctx = canvas.getContext("2d");
-  ctx.lineWidth = 2.2;
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  ctx.strokeStyle = "#000000";
-  var desenhando = false;
-  var temAssinatura = false;
-
-  function posicaoNoCanvas(e) {
-    var rect = canvas.getBoundingClientRect();
-    var escalaX = canvas.width / rect.width;
-    var escalaY = canvas.height / rect.height;
-    return { x: (e.clientX - rect.left) * escalaX, y: (e.clientY - rect.top) * escalaY };
-  }
-
-  canvas.addEventListener("pointerdown", function (e) {
-    desenhando = true;
-    temAssinatura = true;
-    var p = posicaoNoCanvas(e);
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    canvas.setPointerCapture(e.pointerId);
-    e.preventDefault();
-  });
-  canvas.addEventListener("pointermove", function (e) {
-    if (!desenhando) return;
-    var p = posicaoNoCanvas(e);
-    ctx.lineTo(p.x, p.y);
-    ctx.stroke();
-    e.preventDefault();
-  });
-  window.addEventListener("pointerup", function () { desenhando = false; });
-
-  $("limpar-assinatura").addEventListener("click", function () {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    temAssinatura = false;
-  });
-
   // ── Envio ──
   function mostrarErro(msg) {
     elErro.textContent = msg;
@@ -548,10 +480,6 @@
     e.preventDefault();
     ocultarErro();
 
-    if (!temAssinatura) {
-      mostrarErro("Assine no campo de assinatura antes de enviar.");
-      return;
-    }
     if (!elCampoPosto.classList.contains("hidden") && !elPosto.value) {
       mostrarErro("Selecione o Posto.");
       return;
@@ -596,7 +524,6 @@
       motivo: elCampoMotivo.classList.contains("hidden") ? null : (elMotivo.value || null),
       responsavelCargo: elResponsavelCargo.value,
       responsavelNome: elCampoResponsavelNome.classList.contains("hidden") ? null : (elResponsavelNome.value || null),
-      assinaturaBase64: canvas.toDataURL("image/png"),
     };
 
     elBtnEnviar.disabled = true;
