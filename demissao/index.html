@@ -203,6 +203,11 @@
     </div>
 
     <div class="field">
+      <label for="dataDemissao">Data de demissão:</label>
+      <input type="date" id="dataDemissao" required />
+    </div>
+
+    <div class="field">
       <label>Tempo de serviço:</label>
       <div class="readonly-value" id="tempoServico">—</div>
     </div>
@@ -295,6 +300,7 @@
   var elAvisoInicio = $("avisoPrevioInicio");
   var elAvisoFim = $("avisoPrevioFim");
   var elDataAdmissao = $("dataAdmissao");
+  var elDataDemissao = $("dataDemissao");
   var elTempoServico = $("tempoServico");
   var elCampoMotivo = $("campo-motivo");
   var elMotivo = $("motivo");
@@ -439,9 +445,13 @@
 
   function atualizarTempoServico() {
     var inicio = elDataAdmissao.value;
-    var fim = elAvisoFim.value || hoje();
+    var fim = elDataDemissao.value || elAvisoFim.value || hoje();
     if (!inicio) { elTempoServico.textContent = "—"; return; }
     elTempoServico.textContent = tempoDeServico(inicio, fim);
+  }
+
+  function atualizarMinDataDemissao() {
+    elDataDemissao.min = elDataAdmissao.value || "";
   }
 
   function atualizarResponsavelNome() {
@@ -460,6 +470,8 @@
   elDemissao.addEventListener("change", atualizarAvisoPrevio);
   elAviso.addEventListener("change", atualizarDatasAviso);
   elDataAdmissao.addEventListener("change", atualizarTempoServico);
+  elDataAdmissao.addEventListener("change", atualizarMinDataDemissao);
+  elDataDemissao.addEventListener("change", atualizarTempoServico);
   elAvisoFim.addEventListener("change", atualizarTempoServico);
   elResponsavelCargo.addEventListener("change", atualizarResponsavelNome);
 
@@ -500,6 +512,10 @@
       mostrarErro("Data de admissão não pode ser uma data futura.");
       return;
     }
+    if (elDataDemissao.value && elDataAdmissao.value && elDataDemissao.value < elDataAdmissao.value) {
+      mostrarErro("Data de demissão não pode ser antes da data de admissão.");
+      return;
+    }
     if (!elCamposDatasAviso.classList.contains("hidden") && elAvisoInicio.value && elAvisoInicio.value > hoje()) {
       mostrarErro("Data inicial do Aviso Prévio não pode ser uma data futura.");
       return;
@@ -519,6 +535,7 @@
       avisoPrevioInicio: elCamposDatasAviso.classList.contains("hidden") ? null : (elAvisoInicio.value || null),
       avisoPrevioFim: elCamposDatasAviso.classList.contains("hidden") ? null : (elAvisoFim.value || null),
       dataAdmissao: elDataAdmissao.value,
+      dataDemissao: elDataDemissao.value,
       motivo: elCampoMotivo.classList.contains("hidden") ? null : (elMotivo.value || null),
       responsavelCargo: elResponsavelCargo.value,
       responsavelNome: elCampoResponsavelNome.classList.contains("hidden") ? null : (elResponsavelNome.value || null),
@@ -554,6 +571,7 @@
   elDataAdmissao.max = hoje();
   elAvisoInicio.max = hoje();
   elAvisoFim.min = hoje();
+  atualizarMinDataDemissao();
 
   atualizarAvisoPrevio();
 })();
