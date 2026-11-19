@@ -121,7 +121,8 @@
   .btn-primary:disabled { opacity: 0.5; cursor: default; }
   .btn-ghost { background: transparent; color: var(--text); border-color: var(--border-control); }
   .btn-ghost:hover:not(:disabled) { color: var(--primary); border-color: var(--primary); }
-  .btn-ghost[aria-pressed="true"] { background: var(--primary); color: #fff; border-color: var(--primary); }
+  .btn-ghost[aria-pressed="true"],
+  .btn-ghost[aria-pressed="true"]:hover:not(:disabled) { background: var(--primary); color: #fff; border-color: var(--primary); }
 
   .sub-campo { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
   .nps-erro { color: #c62828; font-size: 14px; margin-bottom: 12px; text-align: center; }
