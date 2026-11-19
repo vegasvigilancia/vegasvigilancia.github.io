@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Formulário | Vegas Vigilância e Segurança</title>
+<script>
+(function () {
+  try {
+    if (localStorage.getItem("vegas-connect-theme") === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" />
+<style>
+  :root {
+    --font-sans: Arial, Helvetica, sans-serif;
+    --bg: #f5f5f5;
+    --surface: #ffffff;
+    --border: #e5e5e5;
+    --border-control: #8f8f8f;
+    --text: #111111;
+    --muted: #666666;
+    --primary: #1976d2;
+    --danger: #d32f2f;
+    --chip-bg: #f2f2f2;
+    --shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+    --radius-sm: 8px;
+    --radius: 12px;
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --border-control: #707070;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --primary: #1f6feb;
+    --danger: #f85149;
+    --chip-bg: #21262d;
+    --shadow: 0 8px 24px rgba(1, 4, 9, 0.6);
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--text);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  button { font: inherit; cursor: pointer; }
+  .hidden { display: none !important; }
+
+  .brand-logo { display: block; width: 220px; max-width: 100%; height: auto; }
+  .brand-logo--dark { display: none; }
+  :root[data-theme="dark"] .brand-logo--light { display: none; }
+  :root[data-theme="dark"] .brand-logo--dark { display: block; }
+
+  .theme-toggle-fixed { position: fixed; top: 10px; right: 28px; z-index: 50; }
+  .theme-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border-control); border-radius: var(--radius-sm);
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .theme-toggle:hover { border-color: var(--primary); color: var(--primary); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .theme-toggle .material-icons-outlined { font-size: 20px; line-height: 1; }
+
+  .nps-page { flex: 1; display: flex; justify-content: center; padding: 56px 16px 32px; }
+  .nps-card {
+    width: 100%; max-width: 560px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    align-self: flex-start;
+  }
+  .nps-logo { display: flex; justify-content: center; margin-bottom: 16px; }
+  .nps-titulo { text-align: center; font-size: 20px; letter-spacing: 0.06em; margin-bottom: 20px; }
+
+  .nps-campo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .nps-campo-rotulo { font-size: 12px; font-weight: 600; letter-spacing: 0.05em; color: var(--muted); }
+  .nps-campo input {
+    width: 100%; padding: 10px 12px;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border-control); border-radius: 4px;
+    font: inherit;
+  }
+  .nps-campo input:focus { outline: 2px solid var(--primary); outline-offset: 1px; }
+  .obrigatorio { color: var(--danger); font-weight: 700; }
+
+  .grupo-botoes { display: grid; grid-template-columns: 1fr; justify-items: stretch; gap: 10px; }
+  .grupo-botoes--2col { grid-template-columns: repeat(2, 1fr); }
+  .grupo-botoes > button { width: 100%; height: 100%; justify-content: center; text-align: center; white-space: normal; line-height: 1.25; }
+
+  .btn-primary, .btn-ghost {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 16px;
+    border: 1px solid var(--primary); border-radius: 4px;
+    font-size: 14px; font-weight: 600; text-transform: uppercase;
+    white-space: nowrap; max-width: 100%;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover:not(:disabled) { opacity: 0.88; }
+  .btn-primary:disabled { opacity: 0.5; cursor: default; }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border-control); }
+  .btn-ghost:hover:not(:disabled) { color: var(--primary); border-color: var(--primary); }
+  .btn-ghost[aria-pressed="true"] { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .sub-campo { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .nps-erro { color: #c62828; font-size: 14px; margin-bottom: 12px; text-align: center; }
+  .nps-enviar { width: 100%; padding: 12px 16px; }
+  .aviso-privacidade { text-align: center; font-size: 12px; color: var(--muted); margin: 12px 0 0; }
+  .aviso-privacidade a { color: inherit; text-decoration: underline; }
+  .armadilha { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .sucesso { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; padding: 8px 0; }
+  .sucesso .material-icons-outlined { font-size: 48px; color: var(--primary); }
+  .sucesso-protocolo { background: var(--chip-bg); border: 1px solid var(--border-control); border-radius: 8px; padding: 12px 28px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 24px; font-weight: 600; letter-spacing: 0.1em; overflow-wrap: anywhere; }
+
+  .rodape-global { width: 100%; text-align: center; padding: 24px 16px 32px; font-size: 12px; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .nps-card { padding: 20px 16px; }
+    .theme-toggle-fixed { right: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="theme-toggle-fixed">
+  <button type="button" class="theme-toggle" id="btn-tema" aria-label="Usar tema escuro" title="Usar tema escuro">
+    <span class="material-icons-outlined" id="icone-tema" aria-hidden="true">dark_mode</span>
+  </button>
+</div>
+
+<main class="nps-page">
+  <div class="nps-card">
+    <div class="nps-logo">
+      <img class="brand-logo brand-logo--light" src="../assets/logo_name_black.png" alt="Vegas Vigilância" width="220" height="73" />
+      <img class="brand-logo brand-logo--dark" src="../assets/logo_name_white.png" alt="Vegas Vigilância" width="220" height="73" />
+    </div>
+    <h1 class="nps-titulo">FORMULÁRIO</h1>
+
+    <form id="form" novalidate>
+      <div id="area-form">
+        <div class="nps-campo">
+          <label class="nps-campo-rotulo" for="nome">NOME <span class="obrigatorio">*</span></label>
+          <input id="nome" type="text" autocomplete="name" maxlength="120" />
+        </div>
+
+        <div class="nps-campo">
+          <label class="nps-campo-rotulo" for="cpf">CPF <span class="obrigatorio">*</span></label>
+          <input id="cpf" type="text" inputmode="numeric" autocomplete="off" maxlength="14" placeholder="000.000.000-00" />
+        </div>
+
+        <div class="nps-campo">
+          <span class="nps-campo-rotulo" id="rotulo-posto">POSTO <span class="obrigatorio">*</span></span>
+          <div class="grupo-botoes" id="grupo-posto" role="group" aria-labelledby="rotulo-posto"></div>
+        </div>
+
+        <div class="nps-campo">
+          <span class="nps-campo-rotulo" id="rotulo-acomp">ACOMPANHANTE (OPCIONAL)</span>
+          <div class="grupo-botoes" id="grupo-acomp" role="group" aria-labelledby="rotulo-acomp">
+            <button type="button" class="btn-ghost" id="btn-companheiro" aria-pressed="false">Companheira(o)</button>
+            <button type="button" class="btn-ghost" id="btn-filho" aria-pressed="false">Filho até 14 anos</button>
+          </div>
+          <div class="sub-campo hidden" id="sub-filhos">
+            <span class="nps-campo-rotulo" id="rotulo-filhos">QUANTIDADE DE FILHOS (MÁXIMO 2) <span class="obrigatorio">*</span></span>
+            <div class="grupo-botoes grupo-botoes--2col" id="grupo-filhos" role="group" aria-labelledby="rotulo-filhos"></div>
+          </div>
+        </div>
+
+        <div class="armadilha" aria-hidden="true">
+          <label>Site <input id="site" type="text" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <p class="nps-erro hidden" id="erro" role="alert"></p>
+        <button type="submit" class="btn-primary nps-enviar" id="btn-enviar">Enviar</button>
+        <p class="aviso-privacidade">Ao enviar, você está ciente do tratamento dos seus dados conforme nossa <a href="https://connect.vegasvigilancia.com.br/politica-de-privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</p>
+      </div>
+
+      <div class="sucesso hidden" id="sucesso" role="status">
+        <span class="material-icons-outlined" aria-hidden="true">check_circle</span>
+        <p>Formulário enviado com sucesso.</p>
+        <div class="sucesso-protocolo hidden" id="protocolo"></div>
+      </div>
+    </form>
+  </div>
+</main>
+
+<footer class="rodape-global">Vegas Vigilância e Segurança © 2026 · CNPJ 29.890.721/0001-04</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  var API_URL = "https://portal.vegasvigilancia.com.br/api/central-de-controle/formulario-acompanhantes/submit";
+  var POSTOS = ["Sede Volta Redonda", "Sede Niterói", "Posto de serviço externo"];
+
+  var $ = function (id) { return document.getElementById(id); };
+  var posto = "";
+  var companheiro = false;
+  var filho = false;
+  var qtdFilhos = 0;
+
+  function atualizarBotaoTema() {
+    var escuro = document.documentElement.getAttribute("data-theme") === "dark";
+    $("icone-tema").textContent = escuro ? "light_mode" : "dark_mode";
+    var r = escuro ? "Usar tema claro" : "Usar tema escuro";
+    $("btn-tema").setAttribute("aria-label", r);
+    $("btn-tema").title = r;
+  }
+  $("btn-tema").addEventListener("click", function () {
+    var escuro = document.documentElement.getAttribute("data-theme") === "dark";
+    if (escuro) document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", "dark");
+    try { localStorage.setItem("vegas-connect-theme", escuro ? "light" : "dark"); } catch (e) {}
+    atualizarBotaoTema();
+  });
+  atualizarBotaoTema();
+
+  function criarBotao(texto, aoClicar) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "btn-ghost";
+    b.setAttribute("aria-pressed", "false");
+    b.textContent = texto;
+    b.addEventListener("click", aoClicar);
+    return b;
+  }
+  function marcar(grupo, valor) {
+    Array.prototype.forEach.call(grupo.children, function (b) {
+      b.setAttribute("aria-pressed", b.textContent === valor ? "true" : "false");
+    });
+  }
+
+  POSTOS.forEach(function (p) {
+    $("grupo-posto").appendChild(criarBotao(p, function () { posto = p; marcar($("grupo-posto"), p); }));
+  });
+  [1, 2].forEach(function (n) {
+    var rotulo = n === 1 ? "1 filho" : "2 filhos";
+    $("grupo-filhos").appendChild(criarBotao(rotulo, function () { qtdFilhos = n; marcar($("grupo-filhos"), rotulo); }));
+  });
+
+  $("btn-companheiro").addEventListener("click", function () {
+    companheiro = !companheiro;
+    this.setAttribute("aria-pressed", companheiro ? "true" : "false");
+  });
+  $("btn-filho").addEventListener("click", function () {
+    filho = !filho;
+    this.setAttribute("aria-pressed", filho ? "true" : "false");
+    $("sub-filhos").classList.toggle("hidden", !filho);
+    if (!filho) { qtdFilhos = 0; marcar($("grupo-filhos"), ""); }
+  });
+
+  function soDigitos(v) { return v.replace(/\D/g, ""); }
+  function cpfValido(valor) {
+    var c = soDigitos(valor);
+    if (c.length !== 11 || /^(\d)\1+$/.test(c)) return false;
+    for (var k = 0; k < 2; k++) {
+      var t = k === 0 ? 9 : 10, soma = 0;
+      for (var i = 0; i < t; i++) soma += Number(c[i]) * (t + 1 - i);
+      if (((soma * 10) % 11) % 10 !== Number(c[t])) return false;
+    }
+    return true;
+  }
+  $("cpf").addEventListener("input", function () {
+    var d = soDigitos(this.value).slice(0, 11);
+    var s = d;
+    if (d.length > 9) s = d.slice(0, 3) + "." + d.slice(3, 6) + "." + d.slice(6, 9) + "-" + d.slice(9);
+    else if (d.length > 6) s = d.slice(0, 3) + "." + d.slice(3, 6) + "." + d.slice(6);
+    else if (d.length > 3) s = d.slice(0, 3) + "." + d.slice(3);
+    this.value = s;
+  });
+
+  function mostrarErro(msg) {
+    $("erro").textContent = msg;
+    $("erro").classList.remove("hidden");
+  }
+
+  $("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    $("erro").classList.add("hidden");
+    var nome = $("nome").value.trim().replace(/\s+/g, " ");
+    if (nome.length < 3 || nome.indexOf(" ") < 0) return mostrarErro("Informe o nome completo.");
+    if (!cpfValido($("cpf").value)) return mostrarErro("Informe um CPF válido.");
+    if (!posto) return mostrarErro("Selecione o posto.");
+    if (filho && !qtdFilhos) return mostrarErro("Selecione a quantidade de filhos.");
+
+    var btn = $("btn-enviar");
+    btn.disabled = true;
+    fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nome: nome,
+        cpf: soDigitos($("cpf").value),
+        posto: posto,
+        companheiro: companheiro,
+        filhos: filho ? qtdFilhos : 0,
+        site: $("site").value
+      })
+    })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (!res.ok || res.j.ok === false) { mostrarErro(res.j.erro || "Não foi possível enviar. Tente novamente."); btn.disabled = false; return; }
+        $("area-form").classList.add("hidden");
+        $("sucesso").classList.remove("hidden");
+        if (res.j.protocolo) { $("protocolo").textContent = res.j.protocolo; $("protocolo").classList.remove("hidden"); }
+      })
+      .catch(function () { mostrarErro("Não foi possível enviar. Tente novamente."); btn.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>
