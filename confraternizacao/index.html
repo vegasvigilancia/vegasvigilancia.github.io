@@ -99,10 +99,10 @@
   }
   .nps-campo input:focus,
   .nps-campo select:focus { outline: 2px solid var(--primary); outline-offset: 1px; }
-  .opcoes-acomp { display: flex; flex-direction: column; gap: 10px; }
+  .opcoes-acomp { display: flex; flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 10px 28px; }
   .opcao-marcavel {
     display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-start;
-    text-align: left; gap: 10px; width: 100%; font-size: 15px; color: var(--text); cursor: pointer;
+    text-align: left; gap: 10px; font-size: 15px; color: var(--text); cursor: pointer;
   }
   .opcao-marcavel input { width: 16px; height: 16px; min-width: 16px; flex: 0 0 auto; margin-top: 3px; padding: 0; accent-color: var(--primary); }
 
@@ -186,8 +186,8 @@
         <div class="nps-campo">
           <span class="nps-campo-rotulo" id="rotulo-acomp">ACOMPANHANTE (OPCIONAL)</span>
           <div class="opcoes-acomp" role="group" aria-labelledby="rotulo-acomp">
-            <label class="opcao-marcavel"><input type="checkbox" id="chk-companheiro" /><span>Companheira(o)</span></label>
-            <label class="opcao-marcavel"><input type="checkbox" id="chk-filho" /><span>Filho até 14 anos</span></label>
+            <label class="opcao-marcavel"><input type="checkbox" id="chk-companheiro" /><span>COMPANHEIRO(A)</span></label>
+            <label class="opcao-marcavel"><input type="checkbox" id="chk-filho" /><span>FILHO(A) ATÉ 14 ANOS</span></label>
           </div>
           <div class="sub-campo hidden" id="sub-filhos">
             <label class="nps-campo-rotulo" for="qtd-filhos">QUANTIDADE DE FILHOS (MÁXIMO 2) <span class="obrigatorio">*</span></label>
