@@ -49,7 +49,7 @@
     font-size: 15px;
     line-height: 1.5;
     color: var(--text);
-    background: var(--bg);
+    background: var(--bg) url("../assets/confraternizacao-fundo.jpg") center / cover no-repeat fixed;
     -webkit-font-smoothing: antialiased;
     display: flex;
     flex-direction: column;
@@ -129,7 +129,7 @@
   .sucesso .material-icons-outlined { font-size: 48px; color: var(--primary); }
   .sucesso-protocolo { background: var(--chip-bg); border: 1px solid var(--border-control); border-radius: 8px; padding: 12px 28px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 24px; font-weight: 600; letter-spacing: 0.1em; overflow-wrap: anywhere; }
 
-  .rodape-global { width: 100%; text-align: center; padding: 24px 16px 32px; font-size: 12px; color: var(--muted); }
+  .rodape-global { align-self: center; width: auto; max-width: calc(100% - 32px); text-align: center; padding: 6px 14px; margin: 0 auto 24px; font-size: 12px; color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); }
 
   @media (max-width: 640px) {
     .nps-card { padding: 20px 16px; }
