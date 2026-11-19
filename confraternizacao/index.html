@@ -99,12 +99,8 @@
   }
   .nps-campo input:focus,
   .nps-campo select:focus { outline: 2px solid var(--primary); outline-offset: 1px; }
-  .opcoes-acomp { display: flex; flex-direction: row; flex-wrap: wrap; align-items: flex-start; justify-content: center; gap: 10px 28px; }
-  .opcao-marcavel {
-    display: flex; flex-direction: row; align-items: flex-start; justify-content: flex-start;
-    text-align: left; gap: 10px; font-size: 15px; color: var(--text); cursor: pointer;
-  }
-  .opcao-marcavel input { width: 16px; height: 16px; min-width: 16px; flex: 0 0 auto; margin-top: 3px; padding: 0; accent-color: var(--primary); }
+  .opcoes-acomp { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .opcoes-acomp > button { width: 100%; justify-content: center; text-align: center; white-space: normal; line-height: 1.25; text-transform: none; }
 
   .obrigatorio { color: var(--danger); font-weight: 700; }
 
@@ -186,8 +182,8 @@
         <div class="nps-campo">
           <span class="nps-campo-rotulo" id="rotulo-acomp">ACOMPANHANTE (OPCIONAL)</span>
           <div class="opcoes-acomp" role="group" aria-labelledby="rotulo-acomp">
-            <label class="opcao-marcavel"><input type="checkbox" id="chk-companheiro" /><span>Companheira(o)</span></label>
-            <label class="opcao-marcavel"><input type="checkbox" id="chk-filho" /><span>Filho até 14 anos</span></label>
+            <button type="button" class="btn-ghost" id="btn-companheiro" aria-pressed="false">Companheira(o)</button>
+            <button type="button" class="btn-ghost" id="btn-filho" aria-pressed="false">Filho até 14 anos</button>
           </div>
           <div class="sub-campo hidden" id="sub-filhos">
             <label class="nps-campo-rotulo" for="qtd-filhos">QUANTIDADE DE FILHOS (MÁXIMO 2) <span class="obrigatorio">*</span></label>
@@ -249,9 +245,13 @@
 
   $("posto").addEventListener("change", function () { posto = this.value; });
   $("qtd-filhos").addEventListener("change", function () { qtdFilhos = Number(this.value) || 0; });
-  $("chk-companheiro").addEventListener("change", function () { companheiro = this.checked; });
-  $("chk-filho").addEventListener("change", function () {
-    filho = this.checked;
+  $("btn-companheiro").addEventListener("click", function () {
+    companheiro = !companheiro;
+    this.setAttribute("aria-pressed", companheiro ? "true" : "false");
+  });
+  $("btn-filho").addEventListener("click", function () {
+    filho = !filho;
+    this.setAttribute("aria-pressed", filho ? "true" : "false");
     $("sub-filhos").classList.toggle("hidden", !filho);
     if (!filho) { qtdFilhos = 0; $("qtd-filhos").selectedIndex = 0; }
   });
@@ -285,8 +285,8 @@
     e.preventDefault();
     $("erro").classList.add("hidden");
     posto = $("posto").value;
-    companheiro = $("chk-companheiro").checked;
-    filho = $("chk-filho").checked;
+    companheiro = $("btn-companheiro").getAttribute("aria-pressed") === "true";
+    filho = $("btn-filho").getAttribute("aria-pressed") === "true";
     qtdFilhos = filho ? Number($("qtd-filhos").value) || 0 : 0;
     var nome = $("nome").value.trim().replace(/\s+/g, " ");
     if (nome.length < 3 || nome.indexOf(" ") < 0) return mostrarErro("Informe o nome completo.");
