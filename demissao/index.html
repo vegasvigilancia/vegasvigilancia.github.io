@@ -3,249 +3,264 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Formulário demissional — Vegas Vigilância e Segurança</title>
+<title>Formulário demissional | Vegas Vigilância e Segurança</title>
+<script>
+(function () {
+  try {
+    if (localStorage.getItem("vegas-connect-theme") === "dark") document.documentElement.setAttribute("data-theme", "dark");
+  } catch (e) {}
+})();
+</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" />
 <style>
   :root {
-    color-scheme: light dark;
-    --bg: #0b0f14;
-    --surface: #12181f;
-    --surface-2: #1a222b;
-    --text: #f5f6f7;
-    --muted: #9aa4af;
-    --accent: #d4af37;
-    --border: #2a333e;
-    --danger: #e5534b;
-    --ok: #3fb950;
+    --font-sans: Arial, Helvetica, sans-serif;
+    --bg: #f5f5f5;
+    --surface: #ffffff;
+    --border: #e5e5e5;
+    --border-control: #8f8f8f;
+    --text: #111111;
+    --muted: #666666;
+    --primary: #1976d2;
+    --danger: #d32f2f;
+    --chip-bg: #f2f2f2;
+    --shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+    --radius-sm: 8px;
+    --radius: 12px;
+    color-scheme: light;
   }
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #f2f4f6;
-      --surface: #ffffff;
-      --surface-2: #f7f8fa;
-      --text: #14181d;
-      --muted: #5b6570;
-      --accent: #a8841f;
-      --border: #dde2e7;
-      --danger: #c0392b;
-      --ok: #1f8b3d;
-    }
+  :root[data-theme="dark"] {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --border-control: #707070;
+    --text: #c9d1d9;
+    --muted: #8b949e;
+    --primary: #1f6feb;
+    --danger: #f85149;
+    --chip-bg: #21262d;
+    --shadow: 0 8px 24px rgba(1, 4, 9, 0.6);
+    color-scheme: dark;
   }
-  * { box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
   body {
-    margin: 0;
-    background: var(--bg);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
     color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    padding: 24px 16px 60px;
-  }
-  .wrap { max-width: 640px; margin: 0 auto; }
-  .brand {
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
     display: flex;
-    justify-content: center;
-    padding: 9px 0;
-    margin-bottom: 10px;
+    flex-direction: column;
+    min-height: 100vh;
   }
-  .brand img { width: 462px; max-width: 100%; height: auto; display: block; }
-  .brand .logo-light { display: none; }
-  @media (prefers-color-scheme: light) {
-    .brand .logo-dark { display: none; }
-    .brand .logo-light { display: block; }
+  button { font: inherit; cursor: pointer; }
+  .hidden { display: none !important; }
+
+  .brand-logo { display: block; width: 220px; max-width: 100%; height: auto; }
+  .brand-logo--dark { display: none; }
+  :root[data-theme="dark"] .brand-logo--light { display: none; }
+  :root[data-theme="dark"] .brand-logo--dark { display: block; }
+
+  .theme-toggle-fixed { position: fixed; top: 10px; right: 28px; z-index: 50; }
+  .theme-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border-control); border-radius: var(--radius-sm);
+    transition: border-color 0.15s, color 0.15s;
   }
-  @media (max-width: 480px) {
-    .brand img { width: 308px; }
-  }
-  h1 { font-size: 1.4rem; margin: 0 0 24px; text-align: center; letter-spacing: 0.01em; }
-  .card {
+  .theme-toggle:hover { border-color: var(--primary); color: var(--primary); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+  .theme-toggle .material-icons-outlined { font-size: 20px; line-height: 1; }
+
+  .nps-page { flex: 1; display: flex; justify-content: center; padding: 56px 16px 32px; }
+  .nps-card {
+    width: 100%; max-width: 560px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 24px;
-    margin-bottom: 16px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    align-self: flex-start;
   }
-  label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
-  .field { margin-bottom: 18px; }
-  .field:last-child { margin-bottom: 0; }
-  select, input[type="text"], input[type="date"] {
-    width: 100%;
-    padding: 11px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    color: var(--text);
-    font-size: 0.95rem;
-    font-family: inherit;
+  .nps-logo { display: flex; justify-content: center; margin-bottom: 16px; }
+  .nps-titulo { text-align: center; font-size: 20px; letter-spacing: 0.06em; margin-bottom: 20px; }
+
+  .nps-campo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+  .nps-campo-rotulo { font-size: 12px; font-weight: 600; letter-spacing: 0.05em; color: var(--muted); }
+  .nps-campo input[type="text"],
+  .nps-campo input[type="date"],
+  .nps-campo select {
+    width: 100%; padding: 10px 12px;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border-control); border-radius: 4px;
+    font: inherit;
   }
-  select:focus, input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  @media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } }
-  .readonly-value {
-    padding: 11px 12px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface-2);
-    color: var(--muted);
-    font-size: 0.95rem;
-    min-height: 1.2em;
+  .nps-campo input:focus,
+  .nps-campo select:focus { outline: 2px solid var(--primary); outline-offset: 1px; }
+  .opcoes-acomp { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .opcoes-acomp > button { width: 100%; justify-content: center; text-align: center; white-space: normal; line-height: 1.25; }
+
+  .obrigatorio { color: var(--danger); font-weight: 700; }
+
+  .grupo-botoes { display: grid; grid-template-columns: 1fr; justify-items: stretch; gap: 10px; }
+  .grupo-botoes--2col { grid-template-columns: repeat(2, 1fr); }
+  .grupo-botoes > button { width: 100%; height: 100%; justify-content: center; text-align: center; white-space: normal; line-height: 1.25; }
+
+  .btn-primary, .btn-ghost {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 9px 16px;
+    border: 1px solid var(--primary); border-radius: 4px;
+    font-size: 14px; font-weight: 600; text-transform: uppercase;
+    white-space: nowrap; max-width: 100%;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
   }
-  .hidden { display: none !important; }
-  button[type="submit"] {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    border: none;
-    background: var(--accent);
-    color: #14181d;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.02em;
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover:not(:disabled) { opacity: 0.88; }
+  .btn-primary:disabled { opacity: 0.5; cursor: default; }
+  .btn-ghost { background: transparent; color: var(--text); border-color: var(--border-control); }
+  .btn-ghost:hover:not(:disabled) { color: var(--primary); border-color: var(--primary); }
+  .btn-ghost[aria-pressed="true"],
+  .btn-ghost[aria-pressed="true"]:hover:not(:disabled) { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .sub-campo { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .nps-erro { color: #c62828; font-size: 14px; margin-bottom: 12px; text-align: center; }
+  .nps-enviar { width: 100%; padding: 12px 16px; }
+  .aviso-privacidade { text-align: center; font-size: 12px; color: var(--muted); margin: 12px 0 0; }
+  .aviso-privacidade a { color: inherit; text-decoration: underline; }
+  .armadilha { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  .sucesso { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; padding: 8px 0; }
+  .sucesso .material-icons-outlined { font-size: 48px; color: var(--primary); }
+  .sucesso-protocolo { background: var(--chip-bg); border: 1px solid var(--border-control); border-radius: 8px; padding: 12px 28px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 24px; font-weight: 600; letter-spacing: 0.1em; overflow-wrap: anywhere; }
+
+
+  @media (max-width: 640px) {
+    .nps-card { padding: 20px 16px; }
+    .theme-toggle-fixed { right: 16px; }
   }
-  button[type="submit"]:disabled { opacity: 0.6; cursor: default; }
-  .erro {
-    background: color-mix(in srgb, var(--danger) 15%, transparent);
-    border: 1px solid var(--danger);
-    color: var(--danger);
-    padding: 12px 14px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    margin-bottom: 16px;
-  }
-  .sucesso { text-align: center; padding: 20px 0; }
-  .sucesso .selo {
-    width: 56px; height: 56px; border-radius: 50%;
-    background: var(--ok); color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.6rem; margin: 0 auto 16px;
-  }
-  .sucesso .protocolo {
-    font-size: 1.3rem; font-weight: 700; letter-spacing: 0.03em;
-    margin: 8px 0 4px; color: var(--accent);
-  }
-  .sucesso p { color: var(--muted); font-size: 0.9rem; }
+  .nps-campo input[type="date"] { min-height: 42px; }
+  .nps-campo select:disabled { opacity: 0.7; }
+  .linha2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .valor-leitura { padding: 10px 12px; background: var(--chip-bg); color: var(--text); border: 1px solid var(--border-control); border-radius: 4px; min-height: 42px; }
+  @media (max-width: 480px) { .linha2 { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="brand">
-    <img class="logo-dark" src="../assets/logo_name_white.png" alt="Vegas Vigilância e Segurança" />
-    <img class="logo-light" src="../assets/logo_name_black.png" alt="Vegas Vigilância e Segurança" />
-  </div>
-  <h1>Formulário demissional</h1>
+<div class="theme-toggle-fixed">
+  <button type="button" class="theme-toggle" id="btn-tema" aria-label="Usar tema escuro" title="Usar tema escuro">
+    <span class="material-icons-outlined" id="icone-tema" aria-hidden="true">dark_mode</span>
+  </button>
+</div>
 
-  <div class="card" id="erro-geral-box" style="display:none">
-    <div class="erro" id="erro-geral"></div>
-  </div>
+<main class="nps-page">
+  <div class="nps-card">
+    <div class="nps-logo">
+      <img class="brand-logo brand-logo--light" src="../assets/logo_name_black.png" alt="Vegas Vigilância" width="220" height="73" />
+      <img class="brand-logo brand-logo--dark" src="../assets/logo_name_white.png" alt="Vegas Vigilância" width="220" height="73" />
+    </div>
+    <h1 class="nps-titulo">Formulário demissional</h1>
 
-  <form class="card" id="form-demissao">
-    <div class="field">
-      <label for="unidade">Unidade:</label>
-      <select id="unidade" required>
-        <option value="" disabled selected>Selecione</option>
-        <option>Volta Redonda</option>
-        <option>Niterói</option>
-      </select>
+    <div id="erro-geral-box" style="display:none">
+      <div class="nps-erro" id="erro-geral"></div>
     </div>
 
-    <div class="field">
-      <label for="bloco">Bloco:</label>
-      <select id="bloco" required>
-        <option value="" disabled selected>Selecione</option>
-        <option>Eletrônico</option>
-        <option id="opcao-bloco-posto">Posto de Serviço</option>
-        <option>Administração</option>
-      </select>
-    </div>
-
-    <div class="field hidden" id="campo-posto">
-      <label for="posto">Posto:</label>
-      <select id="posto"></select>
-    </div>
-
-    <div class="field">
-      <label for="nomeFuncionario">Nome do funcionário:</label>
-      <input type="text" id="nomeFuncionario" required autocomplete="off" />
-    </div>
-
-    <div class="field">
-      <label for="demissao">Demissão:</label>
-      <select id="demissao" required>
-        <option value="" disabled selected>Selecione</option>
-        <option>Pedido de demissão</option>
-        <option>Desligado</option>
-        <option>Justa Causa</option>
-        <option>Fim da Experiência</option>
-        <option>Abandono de emprego</option>
-        <option>Acordo legal</option>
-      </select>
-    </div>
-
-    <div class="field hidden" id="campo-aviso-previo">
-      <label for="avisoPrevio">Aviso Prévio:</label>
-      <select id="avisoPrevio"></select>
-    </div>
-
-    <div class="hidden" id="campos-datas-aviso">
-      <div class="row2">
-        <div class="field">
-          <label for="avisoPrevioInicio">Data inicial do Aviso Prévio:</label>
-          <input type="date" id="avisoPrevioInicio" />
-        </div>
-        <div class="field">
-          <label for="avisoPrevioFim">Data final do Aviso Prévio:</label>
-          <input type="date" id="avisoPrevioFim" />
+    <form id="form-demissao">
+      <div class="nps-campo">
+        <label class="nps-campo-rotulo" for="unidade">Unidade <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <select id="unidade" required>
+          <option value="" disabled selected>Selecione</option>
+          <option>Volta Redonda</option>
+          <option>Niterói</option>
+        </select>
+      </div>
+      <div class="nps-campo">
+        <label class="nps-campo-rotulo" for="bloco">Bloco <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <select id="bloco" required>
+          <option value="" disabled selected>Selecione</option>
+          <option>Eletrônico</option>
+          <option id="opcao-bloco-posto">Posto de Serviço</option>
+          <option>Administração</option>
+        </select>
+      </div>
+      <div class="nps-campo hidden" id="campo-posto">
+        <label class="nps-campo-rotulo" for="posto">Posto <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <select id="posto"></select>
+      </div>
+      <div class="nps-campo">
+        <label class="nps-campo-rotulo" for="nomeFuncionario">Nome do funcionário <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <input type="text" id="nomeFuncionario" required autocomplete="off" />
+      </div>
+      <div class="nps-campo">
+        <label class="nps-campo-rotulo" for="demissao">Demissão <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <select id="demissao" required>
+          <option value="" disabled selected>Selecione</option>
+          <option>Pedido de demissão</option>
+          <option>Desligado</option>
+          <option>Justa Causa</option>
+          <option>Fim da Experiência</option>
+          <option>Abandono de emprego</option>
+          <option>Acordo legal</option>
+        </select>
+      </div>
+      <div class="nps-campo hidden" id="campo-aviso-previo">
+        <label class="nps-campo-rotulo" for="avisoPrevio">Aviso Prévio <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <select id="avisoPrevio"></select>
+      </div>
+      <div class="hidden" id="campos-datas-aviso">
+        <div class="linha2">
+          <div class="nps-campo">
+            <label class="nps-campo-rotulo" for="avisoPrevioInicio">Data inicial do Aviso Prévio</label>
+            <input type="date" id="avisoPrevioInicio" />
+          </div>
+          <div class="nps-campo">
+            <label class="nps-campo-rotulo" for="avisoPrevioFim">Data final do Aviso Prévio</label>
+            <input type="date" id="avisoPrevioFim" />
+          </div>
         </div>
       </div>
-    </div>
+      <div class="nps-campo">
+        <label class="nps-campo-rotulo" for="dataAdmissao">Data de admissão <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <input type="date" id="dataAdmissao" required />
+      </div>
+      <div class="nps-campo">
+        <label class="nps-campo-rotulo" for="dataDemissao">Data de demissão <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <input type="date" id="dataDemissao" required />
+      </div>
+      <div class="nps-campo">
+        <span class="nps-campo-rotulo">Tempo de serviço</span>
+        <div class="valor-leitura" id="tempoServico"></div>
+      </div>
+      <div class="nps-campo hidden" id="campo-motivo">
+        <label class="nps-campo-rotulo" for="motivo">Motivo <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <select id="motivo"></select>
+      </div>
+      <div class="nps-campo">
+        <label class="nps-campo-rotulo" for="responsavelCargo">Responsável <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <select id="responsavelCargo" required>
+          <option value="" disabled selected>Selecione</option>
+          <option>Diretoria</option>
+          <option>Gerência</option>
+          <option>RH</option>
+        </select>
+      </div>
+      <div class="nps-campo hidden" id="campo-responsavel-nome">
+        <label class="nps-campo-rotulo" for="responsavelNome">Nome do responsável <span class="obrigatorio" aria-hidden="true">*</span></label>
+        <select id="responsavelNome"></select>
+      </div>
+      <button type="submit" class="btn-primary nps-enviar" id="btn-enviar">Enviar</button>
+    </form>
 
-    <div class="field">
-      <label for="dataAdmissao">Data de admissão:</label>
-      <input type="date" id="dataAdmissao" required />
-    </div>
-
-    <div class="field">
-      <label for="dataDemissao">Data de demissão:</label>
-      <input type="date" id="dataDemissao" required />
-    </div>
-
-    <div class="field">
-      <label>Tempo de serviço:</label>
-      <div class="readonly-value" id="tempoServico">—</div>
-    </div>
-
-    <div class="field hidden" id="campo-motivo">
-      <label for="motivo">Motivo:</label>
-      <select id="motivo"></select>
-    </div>
-
-    <div class="field">
-      <label for="responsavelCargo">Responsável:</label>
-      <select id="responsavelCargo" required>
-        <option value="" disabled selected>Selecione</option>
-        <option>Diretoria</option>
-        <option>Gerência</option>
-        <option>RH</option>
-      </select>
-    </div>
-
-    <div class="field hidden" id="campo-responsavel-nome">
-      <label for="responsavelNome">&nbsp;</label>
-      <select id="responsavelNome"></select>
-    </div>
-
-    <div class="field" style="margin-top:26px">
-      <button type="submit" id="btn-enviar">Enviar</button>
-    </div>
-  </form>
-
-  <div class="card hidden" id="card-sucesso">
-    <div class="sucesso">
-      <div class="selo">✓</div>
+    <div class="sucesso hidden" id="card-sucesso">
+      <span class="material-icons-outlined" aria-hidden="true">check_circle</span>
       <p>Formulário enviado com sucesso.</p>
-      <div class="protocolo" id="protocolo-gerado"></div>
+      <div class="sucesso-protocolo" id="protocolo-gerado"></div>
       <p>Guarde este número de protocolo.</p>
     </div>
   </div>
-</div>
+</main>
 
 <script>
 (function () {
@@ -286,6 +301,23 @@
   };
 
   var $ = function (id) { return document.getElementById(id); };
+
+
+  function atualizarBotaoTema() {
+    var escuro = document.documentElement.getAttribute("data-theme") === "dark";
+    $("icone-tema").textContent = escuro ? "light_mode" : "dark_mode";
+    var r = escuro ? "Usar tema claro" : "Usar tema escuro";
+    $("btn-tema").setAttribute("aria-label", r);
+    $("btn-tema").title = r;
+  }
+  $("btn-tema").addEventListener("click", function () {
+    var escuro = document.documentElement.getAttribute("data-theme") === "dark";
+    if (escuro) document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", "dark");
+    try { localStorage.setItem("vegas-connect-theme", escuro ? "light" : "dark"); } catch (e) {}
+    atualizarBotaoTema();
+  });
+  atualizarBotaoTema();
 
   var elUnidade = $("unidade");
   var elBloco = $("bloco");
@@ -344,11 +376,11 @@
     .catch(function () {
       nomesPostos = [];
       if (!elCampoPosto.classList.contains("hidden")) {
-        elPosto.innerHTML = '<option value="" disabled selected>Não foi possível carregar os postos — recarregue a página</option>';
+        elPosto.innerHTML = '<option value="" disabled selected>Não foi possível carregar os postos, recarregue a página</option>';
       }
     });
 
-  // Bloco "Posto de Serviço" só existe em Volta Redonda — em Niterói não tem
+  // Bloco "Posto de Serviço" só existe em Volta Redonda; em Niterói não tem
   // posto cadastrado, então a opção fica indisponível.
   function atualizarOpcaoBlocoPorUnidade() {
     var niteroi = elUnidade.value === "Niterói";
@@ -367,7 +399,7 @@
     }
     elCampoPosto.classList.remove("hidden");
     if (nomesPostos === null) {
-      elPosto.innerHTML = '<option value="" disabled selected>Carregando…</option>';
+      elPosto.innerHTML = '<option value="" disabled selected>Carregando</option>';
     } else {
       preencherSelect(elPosto, nomesPostos, true);
     }
@@ -390,7 +422,7 @@
       dias += new Date(af, mf - 1, 0).getDate();
     }
     if (meses < 0) { anos -= 1; meses += 12; }
-    if (anos < 0) return "—";
+    if (anos < 0) return "";
     var partes = [];
     if (anos > 0) partes.push(anos + " ano" + (anos !== 1 ? "s" : ""));
     if (meses > 0) partes.push(meses + " " + (meses !== 1 ? "meses" : "mês"));
@@ -446,7 +478,7 @@
   function atualizarTempoServico() {
     var inicio = elDataAdmissao.value;
     var fim = elDataDemissao.value || elAvisoFim.value || hoje();
-    if (!inicio) { elTempoServico.textContent = "—"; return; }
+    if (!inicio) { elTempoServico.textContent = ""; return; }
     elTempoServico.textContent = tempoDeServico(inicio, fim);
   }
 
@@ -542,7 +574,7 @@
     };
 
     elBtnEnviar.disabled = true;
-    elBtnEnviar.textContent = "Enviando…";
+    elBtnEnviar.textContent = "Enviando";
 
     fetch(API_URL, {
       method: "POST",
