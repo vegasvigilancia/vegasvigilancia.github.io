@@ -280,6 +280,7 @@
       "Nova oportunidade profissional",
       "Questões relacionadas a gestão",
       "Mudança de domicílio",
+      "Questões pessoais",
       "Não informado",
     ],
     "Desligado": [
@@ -415,7 +416,9 @@
   function tempoDeServico(inicioYMD, fimYMD) {
     var pi = inicioYMD.split("-").map(Number), pf = fimYMD.split("-").map(Number);
     var ai = pi[0], mi = pi[1], di = pi[2];
-    var af = pf[0], mf = pf[1], df = pf[2];
+    // Inclusivo: conta o dia da admissão e o da demissão (soma 1 dia ao fim).
+    var fim1 = new Date(Date.UTC(pf[0], pf[1] - 1, pf[2] + 1));
+    var af = fim1.getUTCFullYear(), mf = fim1.getUTCMonth() + 1, df = fim1.getUTCDate();
     var anos = af - ai, meses = mf - mi, dias = df - di;
     if (dias < 0) {
       meses -= 1;
