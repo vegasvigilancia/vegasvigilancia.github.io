@@ -426,6 +426,11 @@
     }
     if (meses < 0) { anos -= 1; meses += 12; }
     if (anos < 0) return "";
+    // Menos de 3 meses completos: mostra o total de dias corridos (extremos incluídos).
+    if (anos === 0 && meses < 3) {
+      var totalDias = Math.round((fim1.getTime() - Date.UTC(ai, mi - 1, di)) / 86400000);
+      return totalDias + " dia" + (totalDias !== 1 ? "s" : "");
+    }
     var partes = [];
     if (anos > 0) partes.push(anos + " ano" + (anos !== 1 ? "s" : ""));
     if (meses > 0) partes.push(meses + " " + (meses !== 1 ? "meses" : "mês"));
